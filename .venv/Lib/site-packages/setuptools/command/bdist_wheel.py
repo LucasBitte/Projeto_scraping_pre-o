@@ -129,6 +129,9 @@ def get_abi_tag() -> str | None:
     elif soabi and impl == "cp" and soabi.startswith("cp"):
         # Windows
         abi = soabi.split("-")[0]
+        if hasattr(sys, "gettotalrefcount"):
+            # using debug build; append "d" flag
+            abi += "d"
     elif soabi and impl == "pp":
         # we want something like pypy36-pp73
         abi = "-".join(soabi.split("-")[:2])
@@ -257,9 +260,9 @@ class bdist_wheel(Command):
         self.relative = False
         self.owner = None
         self.group = None
-        self.universal: bool = False
-        self.compression: int | str = "deflated"
-        self.python_tag: str = python_tag()
+        self.universal = False
+        self.compression: str | int = "deflated"
+        self.python_tag = python_tag()
         self.build_number: str | None = None
         self.py_limited_api: str | Literal[False] = False
         self.plat_name_supplied = False
@@ -390,9 +393,9 @@ class bdist_wheel(Command):
             supported_tags = [
                 (t.interpreter, t.abi, plat_name) for t in tags.sys_tags()
             ]
-            assert (
-                tag in supported_tags
-            ), f"would build wheel with unsupported tag {tag}"
+            assert tag in supported_tags, (
+                f"would build wheel with unsupported tag {tag}"
+            )
         return tag
 
     def run(self):
