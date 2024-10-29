@@ -1,0 +1,25 @@
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Dependências
+node_modules/
+vendor/
+
+# Compilação
+bin/
+obj/
+dist/
+build/
+
+# Arquivos de configuração
+.env
+
+# Arquivos temporários
+*.log
+*.tmp
+
+# Outros
+*.pyc
+*.class
+*.jar
